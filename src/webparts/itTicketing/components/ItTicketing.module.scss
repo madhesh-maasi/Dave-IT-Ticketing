@@ -1,0 +1,242 @@
+@import "~office-ui-fabric-react/dist/sass/References.scss";
+* {
+  margin: 0;
+  padding: 0;
+}
+.itTicketing {
+  .container {
+    max-width: 700px;
+    margin: 0px auto;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .row {
+    @include ms-Grid-row;
+    @include ms-fontColor-white;
+    background-color: $ms-color-themeDark;
+    padding: 20px;
+  }
+
+  .column {
+    @include ms-Grid-col;
+    @include ms-lg10;
+    @include ms-xl8;
+    @include ms-xlPush2;
+    @include ms-lgPush1;
+  }
+
+  .title {
+    @include ms-font-xl;
+    @include ms-fontColor-white;
+  }
+
+  .subTitle {
+    @include ms-font-l;
+    @include ms-fontColor-white;
+  }
+
+  .description {
+    @include ms-font-l;
+    @include ms-fontColor-white;
+  }
+
+  .button {
+    // Our button
+    text-decoration: none;
+    height: 32px;
+
+    // Primary Button
+    min-width: 80px;
+    background-color: $ms-color-themePrimary;
+    border-color: $ms-color-themePrimary;
+    color: $ms-color-white;
+
+    // Basic Button
+    outline: transparent;
+    position: relative;
+    font-family: "Segoe UI WestEuropean", "Segoe UI", -apple-system,
+      BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: $ms-font-size-m;
+    font-weight: $ms-font-weight-regular;
+    border-width: 0;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 16px;
+
+    .label {
+      font-weight: $ms-font-weight-semibold;
+      font-size: $ms-font-size-m;
+      height: 32px;
+      line-height: 32px;
+      margin: 0 4px;
+      vertical-align: top;
+      display: inline-block;
+    }
+  }
+}
+
+// Custom Style
+.cardSection {
+  display: flex;
+  // justify-content: space-between;
+  flex-wrap: wrap;
+}
+.cardItem {
+  display: flex;
+  // margin: 0 0.5rem;
+
+  margin-bottom: 1rem;
+  width: 24.4%;
+}
+.cardItem:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
+.cardRightBorder {
+  width: 0.8rem;
+  background: rgb(226, 129, 72);
+  background: linear-gradient(
+    180deg,
+    rgba(226, 129, 72, 1) 0%,
+    rgba(242, 164, 95, 1) 50%,
+    rgba(253, 184, 106, 1) 100%
+  );
+  // border-top-right-radius: 0.5rem;
+  // border-bottom-right-radius: 0.5rem;
+}
+
+.cardIcon {
+  width: 2rem;
+  height: 2rem;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  margin: 0.8rem;
+}
+
+.tilesSection {
+  display: flex;
+  // justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  align-items: self-start;
+}
+.tileItem {
+  // box-shadow: -2px 1px 10px 0px #c9c9c9c9;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  // background: rgba(179, 241, 252, 0.1);
+  // backdrop-filter: blur(10px);
+  // border-radius: 0.5rem;
+  min-width: 32%;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+}
+@media screen and (min-width: 2000px) {
+  .tileItem {
+    min-width: 24%;
+  }
+}
+.myApproval {
+  color: #000;
+}
+.tileHeader {
+  display: flex;
+  padding: 0.8rem;
+}
+.tileHeaderRight {
+  color: blue;
+}
+.tileHeaderLeft {
+  display: flex;
+  align-items: center;
+  color: #24299b;
+}
+.tileContent {
+  padding: 0 1rem;
+  overflow-y: auto;
+  height: 70px;
+}
+.tileOne {
+  height: 500px;
+  width: 530px;
+}
+.tileContent::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+}
+
+.tileContent::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f5f5f5;
+}
+
+.tileContent::-webkit-scrollbar-thumb {
+  background-color: #414141;
+  border: 2px solid #555555;
+}
+
+.tileContent {
+  p {
+    margin: 0.2rem 0;
+  }
+}
+.tileTitle {
+  font-weight: 600;
+}
+.tileFooter {
+  margin-top: auto;
+  padding: 1rem;
+}
+.buttonSection {
+  display: flex;
+  justify-content: flex-end;
+  min-height: 2rem;
+}
+.incidentStatus {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.2rem 0;
+}
+.incidentLabel {
+  color: #000;
+}
+.incidentStatusIndication {
+  width: 4rem;
+  .indicationBar {
+    width: 2rem;
+    height: 0.3rem;
+    margin: auto;
+    border-radius: 2rem;
+  }
+  .indicationRed {
+    background-color: red;
+  }
+  .indicationGreen {
+    background-color: rgb(0, 194, 0);
+  }
+}
+.viewAll {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+.viewAllIcon {
+  font-size: 0.9rem;
+  margin-left: 0.2rem;
+  transition: linear 0.2s;
+}
+.viewAll:hover {
+  .viewAllIcon {
+    margin-left: 0.5rem;
+  }
+}
+.carouselImageContent {
+  height: 110px;
+}
+.container {
+  height: 70px;
+}
