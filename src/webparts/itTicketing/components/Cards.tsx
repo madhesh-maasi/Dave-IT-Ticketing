@@ -14,6 +14,8 @@ import { FontSizes, NeutralColors, Depths } from "@fluentui/theme";
 import "./Cards.css";
 import styles from "./ItTicketing.module.scss";
 import "office-ui-fabric-react/dist/css/fabric.css";
+import { graph } from "@pnp/graph/presets/all";
+import { useState, useEffect } from "react";
 
 const iconLearnProps: IDocumentCardLogoProps = {
   logoIcon: "ReadingModeSolid",
@@ -60,12 +62,34 @@ const iconColor = {
   },
 };
 const Cards = (props) => {
+  const [UrlConfig, setUrlConfig] = useState([]);
+  useEffect(() => {
+    props.spcontext.web.lists
+      .getByTitle("ConfigUrl")
+      .items.get()
+      .then((listData) => {
+        setUrlConfig(listData);
+      });
+  }, []);
+
+  console.log(UrlConfig);
+  //var filter=UrlConfig.filter(fil=>fil.Title=="Get Help");
+  //console.log(filter);
+
   return (
     <div className={styles.cardSection}>
       {/* Card Item 1 */}
       <div className={styles.cardItem}>
         {/* <DocumentCard onClickHref="http://bing.com" onClickTarget="_blank"> */}
-        <DocumentCard styles={cardStyles}>
+        <DocumentCard
+          styles={cardStyles}
+          onClick={() => {
+            window.open(
+              UrlConfig.filter((fil) => fil.Title == "Learn")[0].Url,
+              "_blank"
+            );
+          }}
+        >
           <DocumentCardLogo {...iconLearnProps} styles={iconColor} />
           <DocumentCardTitle styles={cardPrimaryTitleStyles} title={"Learn"} />
           <DocumentCardTitle
@@ -82,7 +106,15 @@ const Cards = (props) => {
       {/* Card 2 */}
       <div className={styles.cardItem}>
         {/* <DocumentCard onClickHref="http://bing.com" onClickTarget="_blank"> */}
-        <DocumentCard styles={cardStyles}>
+        <DocumentCard
+          styles={cardStyles}
+          onClick={() => {
+            window.open(
+              UrlConfig.filter((fil) => fil.Title == "Order")[0].Url,
+              "_blank"
+            );
+          }}
+        >
           <DocumentCardLogo {...iconOrderProps} styles={iconColor} />
           <DocumentCardTitle styles={cardPrimaryTitleStyles} title={"Order"} />
           <DocumentCardTitle
@@ -102,8 +134,12 @@ const Cards = (props) => {
         <DocumentCard
           styles={cardStyles}
           onClick={() => {
+            // window.open(
+            //   "https://apps.powerapps.com/play/b56dc6c4-2c47-4ebc-8119-847ee0b618b8?tenantId=3e8e53be-a48f-4147-adf8-7e90a6e46b57",
+            //   "_blank"
+            // );
             window.open(
-              "https://apps.powerapps.com/play/b56dc6c4-2c47-4ebc-8119-847ee0b618b8?tenantId=3e8e53be-a48f-4147-adf8-7e90a6e46b57",
+              UrlConfig.filter((fil) => fil.Title == "Get Help")[0].Url,
               "_blank"
             );
           }}
@@ -127,7 +163,15 @@ const Cards = (props) => {
       {/* Card 4 */}
       <div className={styles.cardItem}>
         {/* <DocumentCard onClickHref="http://bing.com" onClickTarget="_blank"> */}
-        <DocumentCard styles={cardStyles}>
+        <DocumentCard
+          styles={cardStyles}
+          onClick={() => {
+            window.open(
+              UrlConfig.filter((fil) => fil.Title == "Give Feedback")[0].Url,
+              "_blank"
+            );
+          }}
+        >
           <DocumentCardLogo {...iconGiveFeedbackProps} styles={iconColor} />
           <DocumentCardTitle
             styles={cardPrimaryTitleStyles}

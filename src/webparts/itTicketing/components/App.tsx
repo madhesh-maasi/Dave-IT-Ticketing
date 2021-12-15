@@ -17,7 +17,7 @@ const App = (props) => {
           onSearch={(newValue) => console.log("value is " + newValue)}
         />
       </Stack> */}
-      <Cards />
+      <Cards spcontext={props.spcontext} />
       <Tiles spcontext={props.spcontext} graphcontext={props.graphcontext} />
     </div>
   );

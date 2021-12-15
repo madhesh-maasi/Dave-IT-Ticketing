@@ -55,7 +55,7 @@ const Tiles = (props) => {
           <div className={classes.tileHeaderRight}></div>
         </div>
         <div className={`${classes.tileContent} ${classes.tileOne}`}>
-          <ApprovalCarousel />
+          <ApprovalCarousel spcontext={props.spcontext} />
         </div>
       </div>
       {/* Tile Item */}

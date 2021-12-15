@@ -23,6 +23,7 @@
     "@pnp/graph": "^2.11.0",
     "@pnp/sp": "^2.11.0",
     "@pnp/spfx-controls-react": "^3.5.0",
+    "nuka-carousel": "^4.8.4",
     "office-ui-fabric-react": "6.214.0",
     "react": "16.8.5",
     "react-dom": "16.8.5",

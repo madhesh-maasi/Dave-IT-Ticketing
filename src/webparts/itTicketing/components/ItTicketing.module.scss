@@ -2,6 +2,7 @@
 * {
   margin: 0;
   padding: 0;
+  outline: none;
 }
 .itTicketing {
   .container {
@@ -160,8 +161,7 @@
   height: 70px;
 }
 .tileOne {
-  height: 500px;
-  width: 530px;
+  height: 133px;
 }
 .tileContent::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -239,4 +239,16 @@
 }
 .container {
   height: 70px;
+}
+.carouselItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 70%;
+  margin: auto;
+  height: 36px;
+}
+.carouselTitle {
+  color: #000;
+  font-weight: bold;
 }
