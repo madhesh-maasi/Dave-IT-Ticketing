@@ -2,7 +2,19 @@ import * as React from "react";
 import Carousel from "nuka-carousel";
 import { useState, useEffect } from "react";
 import { useId, useBoolean } from "@fluentui/react-hooks";
-import { Dialog, DialogType, DialogFooter } from "@fluentui/react/lib/Dialog";
+
+import {
+  getTheme,
+  mergeStyleSets,
+  FontWeights,
+  ContextualMenu,
+  Toggle,
+  Modal,
+  IDragOptions,
+  IIconProps,
+  Stack,
+  IStackProps,
+} from "@fluentui/react";
 import { hiddenContentStyle, mergeStyles } from "@fluentui/react/lib/Styling";
 import { PrimaryButton, DefaultButton } from "@fluentui/react/lib/Button";
 import styles from "./ItTicketing.module.scss";
@@ -13,14 +25,14 @@ import {
   IDropdownStyles,
   IDropdownOption,
 } from "@fluentui/react/lib/Dropdown";
-
+import { Label } from "@fluentui/react/lib/Label";
+let items = [];
+let selectedItem;
 const dropdownStyles: Partial<IDropdownStyles> = {
-  dropdown: { width: 300 },
+  dropdown: { width: 200 },
 };
 
-const dialogStyles = { main: { maxWidth: 450 } };
-
-function groupArr(data, n) {
+const groupArr = (data, n) => {
   var group = [];
   for (var i = 0, j = 0; i < data.length; i++) {
     if (i >= n && i % n === 0) j++;
@@ -28,49 +40,59 @@ function groupArr(data, n) {
     group[j].push(data[i]);
   }
   return group;
-}
+};
 const ApprovalCarousel = (props) => {
   const [groupedItems, setGroupedItems] = useState([]);
+  const [oldStatus, setOldStatus] = useState("");
+  const [newStatus, setNewStatus] = useState("");
+
+  const [sendRequest, setSendRequest] = useState(true);
+  const [statusKey, setStatusKey] = useState("");
+  const [modalItems, setModalItems] = useState({
+    Subject: "",
+    Priority: "",
+    Owner: "",
+    AssignedTo: "",
+    ID: 0,
+  });
   const [defaultOption, setDefaultOption] = useState(0);
   const [ddOptions, setDdOptions] = useState([]);
-  const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
+  const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] =
+    useBoolean(false);
   const labelId: string = useId("dialogLabel");
   const subTextId: string = useId("subTextLabel");
   useEffect(() => {
-    props.spcontext.web.lists
-      .getByTitle("Tickets")
-      .items.select("*,Status/Title,Status/ID")
-      .expand("Status              ")
-      .orderBy("Created", false)
-      .get()
-      .then(async (listData) => {
-        await props.spcontext.web.lists
-          .getByTitle("DropdownStatus")
-          .items.get()
-          .then((listItem) => {
-            console.log(listItem);
-            setDdOptions(listItem);
-          });
-        setGroupedItems(groupArr(listData, 3));
-      });
-  }, []);
-  console.log(groupedItems);
-  const modalProps = React.useMemo(
-    () => ({
-      titleAriaId: labelId,
-      subtitleAriaId: subTextId,
-      isBlocking: false,
-      styles: dialogStyles,
-    }),
-    [labelId, subTextId]
-  );
+    if (sendRequest) {
+      props.spcontext.web.lists
+        .getByTitle("Tickets")
+        .items.select(
+          "*,Status/Title,Status/ID,AssignedTo/EMail,AssignedTo/Title,Owner/Title,Priority/Title"
+        )
+        .expand("Status", "AssignedTo", "Owner", "Priority")
+        .orderBy("Created", false)
+        .get()
+        .then(async (listData: any) => {
+          listData = listData.filter((li) => li.Status.Title !== "Closed");
+          items = listData;
+
+          await props.spcontext.web.lists
+            .getByTitle("DropdownStatus")
+            .items.get()
+            .then((listItem) => {
+              setDdOptions(listItem);
+            });
+          setGroupedItems(groupArr(items, 3));
+        });
+      setSendRequest(false);
+    }
+  }, [sendRequest]);
+
   const options: IDropdownOption[] = ddOptions.map((option) => {
     return {
       key: option.ID,
       text: option.Title,
     };
   });
-  console.log(options);
 
   return (
     <Carousel
@@ -101,41 +123,132 @@ const ApprovalCarousel = (props) => {
               {liItems.map((liItem) => {
                 return (
                   <div className={styles.carouselItem}>
-                    <div className={styles.carouselTitle}>{liItem.Title}</div>
+                    <div className={styles.carouselTitle}>
+                      {liItem.Title} -{" "}
+                      <span style={{ fontWeight: "normal" }}>
+                        {liItem.Status.Title}
+                      </span>
+                    </div>
                     <div className="carouselIcon">
                       <Icon
                         onClick={() => {
-                          toggleHideDialog();
+                          showModal();
                           setDefaultOption(liItem.Status.ID);
-                          console.log(defaultOption);
+                          setOldStatus(liItem.Status.Title);
+                          selectedItem = items.filter(
+                            (item) => item.ID == liItem.ID
+                          )[0];
+                          setModalItems({
+                            Subject: selectedItem.Title,
+                            Priority: selectedItem.Priority.Title,
+                            Owner: selectedItem.Owner.Title,
+                            ID: selectedItem.ID,
+                            AssignedTo: selectedItem.AssignedTo.Title,
+                          });
+                          setStatusKey("");
                         }}
                         iconName="Edit"
                         className={`${liItem.ID}`}
-                        style={{ fontSize: "1.3rem", color: "#24299b" }}
+                        style={{
+                          fontSize: "1.1rem",
+                          color: "#24299b",
+                          cursor: "pointer",
+                        }}
                       />
                     </div>
                   </div>
                 );
               })}
 
-              <Dialog
-                hidden={hideDialog}
-                onDismiss={toggleHideDialog}
-                // dialogContentProps={dialogContentProps}
-                modalProps={modalProps}
+              <Modal
+                isOpen={isModalOpen}
+                onDismiss={hideModal}
+                isBlocking={false}
+                containerClassName={styles.modalBox}
               >
-                <Dropdown
-                  placeholder="Select an option"
-                  label="Status"
-                  options={options}
-                  styles={dropdownStyles}
-                  defaultSelectedKey={defaultOption}
-                />
-                <DialogFooter>
-                  <PrimaryButton onClick={toggleHideDialog} text="Ok" />
-                  <DefaultButton onClick={toggleHideDialog} text="Cancel" />
-                </DialogFooter>
-              </Dialog>
+                <h3
+                  style={{ textAlign: "center", padding: "1rem 1rem 0 1rem" }}
+                >
+                  {modalItems.Subject}
+                </h3>
+                <div className={styles.modalContent}>
+                  <div className={styles.dialogItems}>
+                    <Label style={{ width: "120px" }}>Owner:</Label>
+                    <Label style={{ fontWeight: "lighter" }}>
+                      {modalItems.Owner}
+                    </Label>
+                  </div>
+                  <div className={styles.dialogItems}>
+                    <Label style={{ width: "120px" }}>Priority:</Label>
+                    <Label style={{ fontWeight: "lighter" }}>
+                      {modalItems.Priority}
+                    </Label>
+                  </div>
+                  <div className={styles.dialogItems}>
+                    <Label style={{ width: "120px" }}>Assigned To:</Label>
+                    <Label style={{ fontWeight: "lighter" }}>
+                      {modalItems.AssignedTo}
+                    </Label>
+                  </div>
+                  <div className={styles.dialogItems}>
+                    <Label style={{ width: "120px" }}>Status:</Label>
+                    <Dropdown
+                      placeholder="Select an option"
+                      options={options}
+                      styles={dropdownStyles}
+                      defaultSelectedKey={defaultOption}
+                      onChange={(e, selectedOption) => {
+                        setDefaultOption(parseInt(`${selectedOption.key}`));
+                        setStatusKey(`${selectedOption.key}`);
+                        setNewStatus(selectedOption.text);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.modalFooter}>
+                  <PrimaryButton
+                    onClick={() => {
+                      if (
+                        Object.keys(statusKey).length != 0 &&
+                        oldStatus != newStatus
+                      ) {
+                        hideModal();
+                        let updateData = {};
+                        newStatus == "Escalated to Presidio"
+                          ? (updateData = {
+                              StatusId: defaultOption,
+                              EscalatedOpenDate:
+                                new Date().toLocaleDateString(),
+                            })
+                          : oldStatus == "Escalated to Presidio"
+                          ? (updateData = {
+                              StatusId: defaultOption,
+                              EscalatedClosedDate:
+                                new Date().toLocaleDateString(),
+                            })
+                          : (updateData = {
+                              StatusId: defaultOption,
+                            });
+                        try {
+                          props.spcontext.web.lists
+                            .getByTitle("Tickets")
+                            .items.getById(modalItems.ID)
+                            .update(updateData)
+                            .then(() => {
+                              setSendRequest(true);
+                            });
+                        } catch (error) {
+                          console.log(error);
+                        }
+                      }
+                    }}
+                    text="Update"
+                    style={{ marginRight: "1rem" }}
+                  />
+                  <DefaultButton onClick={hideModal} text="Cancel" />
+                </div>
+              </Modal>
             </div>
           );
         })}

@@ -72,10 +72,6 @@ const Cards = (props) => {
       });
   }, []);
 
-  console.log(UrlConfig);
-  //var filter=UrlConfig.filter(fil=>fil.Title=="Get Help");
-  //console.log(filter);
-
   return (
     <div className={styles.cardSection}>
       {/* Card Item 1 */}

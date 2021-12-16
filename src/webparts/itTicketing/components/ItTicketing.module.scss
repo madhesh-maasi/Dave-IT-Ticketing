@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   outline: none;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .itTicketing {
   .container {
@@ -86,8 +87,6 @@
 }
 .cardItem {
   display: flex;
-  // margin: 0 0.5rem;
-
   margin-bottom: 1rem;
   width: 24.4%;
 }
@@ -104,8 +103,6 @@
     rgba(242, 164, 95, 1) 50%,
     rgba(253, 184, 106, 1) 100%
   );
-  // border-top-right-radius: 0.5rem;
-  // border-bottom-right-radius: 0.5rem;
 }
 
 .cardIcon {
@@ -124,6 +121,10 @@
   margin-top: 2rem;
   align-items: self-start;
 }
+.dialogItems {
+  display: flex;
+  margin: 0.8rem 1rem;
+}
 .tileItem {
   // box-shadow: -2px 1px 10px 0px #c9c9c9c9;
   display: flex;
@@ -132,12 +133,20 @@
   // background: rgba(179, 241, 252, 0.1);
   // backdrop-filter: blur(10px);
   // border-radius: 0.5rem;
-  min-width: 32%;
+  width: 32%;
   margin: 0.5rem 0.5rem 0.5rem 0;
 }
 @media screen and (min-width: 2000px) {
   .tileItem {
-    min-width: 24%;
+    width: 24%;
+  }
+}
+@media screen and (max-width: 960px) {
+  .tileItem {
+    min-width: 300px;
+  }
+  .cardItem {
+    min-width: 300px;
   }
 }
 .myApproval {
@@ -161,7 +170,7 @@
   height: 70px;
 }
 .tileOne {
-  height: 133px;
+  height: 118px;
 }
 .tileContent::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -180,7 +189,8 @@
 
 .tileContent {
   p {
-    margin: 0.2rem 0;
+    margin: 0.24rem 0;
+    font-weight: 600;
   }
 }
 .tileTitle {
@@ -188,7 +198,7 @@
 }
 .tileFooter {
   margin-top: auto;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
 }
 .buttonSection {
   display: flex;
@@ -196,16 +206,15 @@
   min-height: 2rem;
 }
 .incidentStatus {
+  height: 23px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0.2rem 0;
 }
 .incidentLabel {
   color: #000;
 }
 .incidentStatusIndication {
-  width: 4rem;
   .indicationBar {
     width: 2rem;
     height: 0.3rem;
@@ -244,11 +253,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 70%;
+  width: 80%;
   margin: auto;
-  height: 36px;
+  height: 30px;
 }
 .carouselTitle {
   color: #000;
-  font-weight: bold;
+  font-weight: 600;
+}
+.ApprovalDiaFooter {
+  margin-top: 1rem;
+}
+.modalBox {
+  min-width: 400px;
+}
+.modalContent {
+  padding: 0.5rem 1rem;
+}
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+}
+.contentAlignment {
+  width: 90%;
+  margin: auto;
 }
