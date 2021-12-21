@@ -15,7 +15,6 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { graph } from "@pnp/graph/presets/all";
-
 export interface IItTicketingWebPartProps {
   description: string;
   context: string;
@@ -33,6 +32,7 @@ export default class ItTicketingWebPart extends BaseClientSideWebPart<IItTicketi
       });
     });
   }
+
   public render(): void {
     const element: React.ReactElement<IItTicketingProps> = React.createElement(
       ItTicketing,
