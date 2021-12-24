@@ -167,10 +167,10 @@
 .tileContent {
   padding: 0 1rem;
   overflow-y: auto;
-  height: 70px;
+  height: 87px;
 }
 .tileOne {
-  height: 118px;
+  height: 135px;
 }
 .tileContent::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -192,6 +192,10 @@
     margin: 0.24rem 0;
     font-weight: 600;
   }
+  a {
+    color: #000;
+    text-decoration: none;
+  }
 }
 .tileTitle {
   font-weight: 600;
@@ -210,9 +214,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0.24rem 0;
 }
 .incidentLabel {
   color: #000;
+  width: 100%;
 }
 .incidentStatusIndication {
   .indicationBar {
@@ -232,6 +238,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  padding: 0.2rem;
 }
 .viewAllIcon {
   font-size: 0.9rem;
@@ -253,7 +260,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 80%;
+  width: 87%;
   margin: auto;
   height: 30px;
 }
@@ -282,8 +289,22 @@
 .closedImg {
   width: 1.5rem;
   height: 1.5rem;
+  border-radius: 0.2rem;
+}
+.caroArrow {
+  font-size: 1.3rem;
+  cursor: pointer;
+  margin-top: 92px;
+  color: #24299b;
+  padding: 0.2rem;
+  // background-color: #24299b;
 }
 .tableHeader {
   display: flex;
   align-items: center;
+}
+.closedIncidInit {
+  margin-right: 0.5rem;
+  color: #24299b;
+  font-weight: 600;
 }

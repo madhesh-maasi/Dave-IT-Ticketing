@@ -32,6 +32,8 @@ const dropdownStyles: Partial<IDropdownStyles> = {
   dropdown: { width: 200 },
 };
 
+const theme = getTheme();
+const themeBoxShadow = { boxShadow: theme.effects.elevation8 };
 const groupArr = (data, n) => {
   var group = [];
   for (var i = 0, j = 0; i < data.length; i++) {
@@ -105,17 +107,24 @@ const ApprovalCarousel = (props) => {
         <Icon
           onClick={previousSlide}
           iconName="ChevronLeft"
-          style={{ fontSize: "1.3rem", cursor: "pointer" }}
+          className={styles.caroArrow}
+          style={themeBoxShadow}
         />
       )}
       renderCenterRightControls={({ nextSlide }) => (
         <Icon
           onClick={nextSlide}
           iconName="ChevronRight"
-          style={{ fontSize: "1.3rem", cursor: "pointer" }}
+          className={styles.caroArrow}
+          style={themeBoxShadow}
         />
       )}
     >
+      {/* <Icon
+          onClick={previousSlide()}
+          iconName="ChevronLeft"
+          style={{ fontSize: "1.3rem", cursor: "pointer" }}
+        /> */}
       {groupedItems.length > 0 &&
         groupedItems.map((liItems) => {
           return (
@@ -123,11 +132,47 @@ const ApprovalCarousel = (props) => {
               {liItems.map((liItem) => {
                 return (
                   <div className={styles.carouselItem}>
-                    <div className={styles.carouselTitle}>
-                      {liItem.Title} -{" "}
-                      <span style={{ fontWeight: "normal" }}>
+                    <div
+                      className={styles.carouselTitle}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "90%",
+                      }}
+                    >
+                      <div>{liItem.Title} -</div>
+                      <div
+                        style={{
+                          fontWeight: "normal",
+                          padding: "0 0.3rem",
+                          border:
+                            liItem.Status.Title == "New"
+                              ? "2px solid #2844a7"
+                              : liItem.Status.Title == "Closed"
+                              ? "2px solid #28a745"
+                              : liItem.Status.Title == "Escalated to Presidio"
+                              ? "2px solid #dc3545"
+                              : liItem.Status.Title == "In progress"
+                              ? "2px solid #a728a3"
+                              : liItem.Status.Title == "On hold"
+                              ? "2px solid #a3a728"
+                              : "2px solid #000",
+                          color:
+                            liItem.Status.Title == "New"
+                              ? "#2844a7"
+                              : liItem.Status.Title == "Closed"
+                              ? "#28a745"
+                              : liItem.Status.Title == "Escalated to Presidio"
+                              ? "#dc3545"
+                              : liItem.Status.Title == "In progress"
+                              ? "#a728a3"
+                              : liItem.Status.Title == "On hold"
+                              ? "#a3a728"
+                              : "#000",
+                        }}
+                      >
                         {liItem.Status.Title}
-                      </span>
+                      </div>
                     </div>
                     <div className="carouselIcon">
                       <Icon
@@ -143,7 +188,9 @@ const ApprovalCarousel = (props) => {
                             Priority: selectedItem.Priority.Title,
                             Owner: selectedItem.Owner.Title,
                             ID: selectedItem.ID,
-                            AssignedTo: selectedItem.AssignedTo.Title,
+                            AssignedTo: selectedItem.AssignedTo
+                              ? selectedItem.AssignedTo.Title
+                              : "",
                           });
                           setStatusKey("");
                         }}
@@ -242,6 +289,7 @@ const ApprovalCarousel = (props) => {
                           console.log(error);
                         }
                       }
+                      props.onStatusChangeHandler();
                     }}
                     text="Update"
                     style={{ marginRight: "1rem" }}

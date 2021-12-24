@@ -19,7 +19,14 @@ const theme = getTheme();
 const themeBoxShadow = { boxShadow: theme.effects.elevation8 };
 let curUserMail = "";
 let url = window.location.href;
+// console.log(`https://${window.location.href.split("/")[4]`);
+
 let siteAbsoluteUrl = `https://${window.location.href.split("/")[2]}`;
+let siteUrl = `https://${window.location.href.split("/")[2]}/sites/${
+  window.location.href.split("/")[4]
+}`;
+console.log(siteUrl);
+
 const Tiles = (props) => {
   const [closedIncident, setClosedIncident] = useState([]);
   const [openIncidents, setOpenIncidents] = useState([]);
@@ -27,77 +34,76 @@ const Tiles = (props) => {
   const [isUserInGroup, setIsUserInGroup] = useState(false);
   const [feedback, setFeedback] = useState([]);
   const [popularPages, setPopularPages] = useState([]);
+  const [reRender, setReRender] = useState(true);
   useEffect(() => {
-    graph
-      .me()
-      .then(async (userResult) => {
-        setCurrentUser(userResult.displayName);
-        curUserMail = userResult.userPrincipalName;
-        await props.spcontext.web.lists
-          .getByTitle("Tickets")
-          .items.select(
-            "*,Owner/EMail,Owner/Title,Status/Title,AssignedTo/Title,AssignedTo/EMail"
-          )
-          .expand("Owner", "Status", "AssignedTo")
-          .filter(`Owner/EMail eq '${curUserMail}'`)
-          .orderBy("Created", false)
-          .get()
-          .then((listData) => {
-            let arrClosedIncidents = listData.filter(
-              (item) => item.Status.Title == "Closed"
-            );
-            let arrNonClosedIncidents = listData.filter(
-              (item) => item.Status.Title != "Closed"
-            );
-            setClosedIncident(arrClosedIncidents);
-            setOpenIncidents(arrNonClosedIncidents);
-          })
-          .then(async () => {
-            await graph.groups
-              .getById("b64fbcf5-8935-4882-9d67-f18d0e4a91d8")
-              .expand("members")
-              .get()
-              .then((groupData) => {
-                setIsUserInGroup(
-                  groupData.members.filter(
-                    (member) => member["userPrincipalName"] == curUserMail
-                  ).length > 0
-                );
-              });
-          });
-      })
-      .then(async () => {
-        await props.spcontext.web.lists
-          .getByTitle("Feedback")
-          .items.orderBy("Created", false)
-          .get()
-          .then((feedbackList: any) => {
-            setFeedback(feedbackList);
-          });
-        try {
+    if (reRender) {
+      graph
+        .me()
+        .then(async (userResult) => {
+          setCurrentUser(userResult.displayName);
+          curUserMail = userResult.userPrincipalName;
           await props.spcontext.web.lists
-            .getByTitle("Site Pages")
-            .items.orderBy("Created", false)
-            .getAll()
-            .then((pages: any) => {
-              console.log(pages);
-
-              pages = pages.filter((page) => page.isPopular == true);
-              setPopularPages(pages);
+            .getByTitle("Tickets")
+            .items.select(
+              "*,Owner/EMail,Owner/Title,Status/Title,AssignedTo/Title,AssignedTo/EMail"
+            )
+            .expand("Owner", "Status", "AssignedTo")
+            .filter(`Owner/EMail eq '${curUserMail}'`)
+            .orderBy("Modified", false)
+            .get()
+            .then((listData) => {
+              let arrClosedIncidents = listData.filter(
+                (item) => item.Status.Title == "Closed"
+              );
+              let arrNonClosedIncidents = listData.filter(
+                (item) => item.Status.Title != "Closed"
+              );
+              setClosedIncident(arrClosedIncidents);
+              setOpenIncidents(arrNonClosedIncidents);
+            })
+            .then(async () => {
+              await graph.groups
+                .getById("b64fbcf5-8935-4882-9d67-f18d0e4a91d8")
+                .expand("members")
+                .get()
+                .then((groupData) => {
+                  setIsUserInGroup(
+                    groupData.members.filter(
+                      (member) => member["userPrincipalName"] == curUserMail
+                    ).length > 0
+                  );
+                });
             });
-        } catch (error) {
-          console.log(error);
-        }
-      });
-    // fetch(
-    //   `${siteAbsoluteUrl}/_api/search/query?querytext='ContentType:News*+path:${siteAbsoluteUrl}/sites/ITTicketingSystems/'&selectproperties='Title,path,ViewsLifeTime,ViewsLifeTimeUniqueUsers'`
-    // )
-    //   .then((res) => res.json())
-    //   .then((result) => {
-    //     console.log(result);
-    //   });
-  }, []);
+        })
+        .then(async () => {
+          await props.spcontext.web.lists
+            .getByTitle("Feedback")
+            .items.orderBy("Created", false)
+            .get()
+            .then((feedbackList: any) => {
+              setFeedback(feedbackList);
+            });
+          try {
+            await props.spcontext.web.lists
+              .getByTitle("Site Pages")
+              .items.orderBy("Created", false)
+              .getAll()
+              .then((pages: any) => {
+                console.log(pages);
 
+                pages = pages.filter((page) => page.isPopular == true);
+                setPopularPages(pages);
+              });
+          } catch (error) {
+            console.log(error);
+          }
+        });
+    }
+    setReRender(false);
+  }, [reRender]);
+  const renderHandler = () => {
+    setReRender(true);
+  };
   return (
     <div className={classes.tilesSection}>
       {/* Tile Item */}
@@ -117,7 +123,10 @@ const Tiles = (props) => {
             <div className={classes.tileHeaderRight}></div>
           </div>
           <div className={`${classes.tileContent} ${classes.tileOne}`}>
-            <ApprovalCarousel spcontext={props.spcontext} />
+            <ApprovalCarousel
+              spcontext={props.spcontext}
+              onStatusChangeHandler={renderHandler}
+            />
           </div>
         </div>
       )}
@@ -152,24 +161,30 @@ const Tiles = (props) => {
                         fontWeight: "normal",
                       }}
                     >
-                      <span style={{ marginRight: ".5rem" }}>
-                        {`${incident.AssignedTo.Title.split(" ")[0]
-                          .split("")[0]
-                          .toUpperCase()} ${incident.AssignedTo.Title.split(
-                          " "
-                        )[1]
-                          .split("")[0]
-                          .toUpperCase()}`}
-                      </span>
-                      <img
-                        className={classes.closedImg}
-                        src={getMyPictureUrl(
-                          siteAbsoluteUrl,
-                          incident.AssignedTo.EMail,
-                          "S"
-                        )}
-                        alt={incident.AssignedTo.EMail}
-                      />
+                      {incident.AssignedTo ? (
+                        <>
+                          <span className={classes.closedIncidInit}>
+                            {`${incident.AssignedTo.Title.split(" ")[0]
+                              .split("")[0]
+                              .toUpperCase()}${incident.AssignedTo.Title.split(
+                              " "
+                            )[1]
+                              .split("")[0]
+                              .toUpperCase()}`}
+                          </span>
+                          <img
+                            className={classes.closedImg}
+                            src={getMyPictureUrl(
+                              siteAbsoluteUrl,
+                              incident.AssignedTo.EMail,
+                              "S"
+                            )}
+                            alt={incident.AssignedTo.EMail}
+                          />
+                        </>
+                      ) : (
+                        ""
+                      )}
                     </span>
                   </p>
                 );
@@ -181,6 +196,7 @@ const Tiles = (props) => {
             <a
               href="#"
               className={classes.viewAll}
+              style={themeBoxShadow}
               onClick={() => {
                 props.onViewAllClicked("ClosedIncidents");
                 // window.open(
@@ -216,7 +232,7 @@ const Tiles = (props) => {
               return (
                 <p>
                   <a
-                    href={`${siteAbsoluteUrl}/SitePages/${page.Title}.aspx`}
+                    href={`${siteUrl}/SitePages/${page.Title}.aspx`}
                     target="_blank"
                   >
                     {page.Title}
@@ -231,6 +247,7 @@ const Tiles = (props) => {
             <a
               href="#"
               className={classes.viewAll}
+              style={themeBoxShadow}
               onClick={() => {
                 props.onViewAllClicked("PopularPage");
               }}
@@ -263,9 +280,46 @@ const Tiles = (props) => {
                 return (
                   <div className={classes.incidentStatus}>
                     <div className={classes.incidentLabel}>
-                      <p>
-                        {incident.Title} -{" "}
-                        <span style={{ fontWeight: "normal" }}>
+                      <p
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "100%",
+                        }}
+                      >
+                        <span>{incident.Title} -</span>{" "}
+                        <span
+                          style={{
+                            padding: "0 0.3rem",
+                            fontWeight: "normal",
+                            border:
+                              incident.Status.Title == "New"
+                                ? "2px solid #2844a7"
+                                : incident.Status.Title == "Closed"
+                                ? "2px solid #28a745"
+                                : incident.Status.Title ==
+                                  "Escalated to Presidio"
+                                ? "2px solid #dc3545"
+                                : incident.Status.Title == "In progress"
+                                ? "2px solid #a728a3"
+                                : incident.Status.Title == "On hold"
+                                ? "2px solid #a3a728"
+                                : "2px solid #000",
+                            color:
+                              incident.Status.Title == "New"
+                                ? "#2844a7"
+                                : incident.Status.Title == "Closed"
+                                ? "#28a745"
+                                : incident.Status.Title ==
+                                  "Escalated to Presidio"
+                                ? "#dc3545"
+                                : incident.Status.Title == "In progress"
+                                ? "#a728a3"
+                                : incident.Status.Title == "On hold"
+                                ? "#a3a728"
+                                : "#000",
+                          }}
+                        >
                           {incident.Status.Title}
                         </span>
                       </p>
@@ -280,6 +334,7 @@ const Tiles = (props) => {
             <a
               href="#"
               className={classes.viewAll}
+              style={themeBoxShadow}
               onClick={() => {
                 props.onViewAllClicked("CurrentIncidents");
               }}
@@ -314,7 +369,14 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileFooter}>
           <div className={classes.buttonSection}>
-            <a href="#" className={classes.viewAll}>
+            <a
+              href="#"
+              className={classes.viewAll}
+              style={themeBoxShadow}
+              onClick={() => {
+                props.onViewAllClicked("MyFeedBacks");
+              }}
+            >
               View All
               <Icon iconName="ChevronRight" className={classes.viewAllIcon} />
             </a>
