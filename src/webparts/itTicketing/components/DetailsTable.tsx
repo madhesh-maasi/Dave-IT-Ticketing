@@ -7,10 +7,11 @@ import {
   SelectionMode,
   IColumn,
 } from "@fluentui/react/lib/DetailsList";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import classes from "./ItTicketing.module.scss";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { PrimaryButton } from "@fluentui/react";
+import _ from "lodash";
 let allitems = [];
 
 const DetailsTable = (props) => {
@@ -18,8 +19,18 @@ const DetailsTable = (props) => {
   const [columnsForTable, setcolumnsForTable] = useState([]);
   const [searchKey, setSearchKey] = useState("");
   const [dashTitle, setDashTitle] = useState("");
-
-  const columns: IColumn[] = [
+  const handleColumnClick = (ev, col) => {
+    _copyAndSort(allitems, col.fieldName,col.isSortedDescending)
+    col.isSortedDescending?col.isSortedDescending=false:col.isSortedDescending=true;
+    let oldColumns = columns.filter((colm)=>colm.key ==col.key);
+    oldColumns[0].isSortedDescending == true?(oldColumns[0].isSortedDescending = false):(oldColumns[0].isSortedDescending = true);
+    let newColumns = columns.filter((colm)=>colm.key !=col.key);
+    columns = [...oldColumns,...newColumns];
+    columns = _.sortBy(columns,'key');
+    
+    setcolumnsForTable(columns)
+  };
+  let columns: IColumn[] = [
     {
       key: "column1",
       name: "Title",
@@ -29,11 +40,12 @@ const DetailsTable = (props) => {
       isRowHeader: true,
       isResizable: true,
       isSorted: true,
-      isSortedDescending: true,
-      sortAscendingAriaLabel: "Sorted A to Z",
-      sortDescendingAriaLabel: "Sorted Z to A",
+      sortAscendingAriaLabel: 'Sorted A to Z',
+      sortDescendingAriaLabel: 'Sorted Z to A',
       data: "string",
       isPadded: true,
+      onColumnClick: handleColumnClick,
+      isSortedDescending: true
     },
     {
       key: "column2",
@@ -49,6 +61,7 @@ const DetailsTable = (props) => {
       sortDescendingAriaLabel: "Sorted Z to A",
       data: "string",
       isPadded: true,
+      onColumnClick: handleColumnClick,
     },
     {
       key: "column3",
@@ -64,6 +77,7 @@ const DetailsTable = (props) => {
       sortDescendingAriaLabel: "Sorted Z to A",
       data: "string",
       isPadded: true,
+      onColumnClick: handleColumnClick,
     },
     {
       key: "column4",
@@ -74,11 +88,12 @@ const DetailsTable = (props) => {
       isRowHeader: true,
       isResizable: true,
       isSorted: true,
-      isSortedDescending: true,
+      isSortedDescending: false,
       sortAscendingAriaLabel: "Sorted A to Z",
       sortDescendingAriaLabel: "Sorted Z to A",
       data: "string",
       isPadded: true,
+      onColumnClick: handleColumnClick,
     },
   ];
 
@@ -97,9 +112,10 @@ const DetailsTable = (props) => {
       sortDescendingAriaLabel: "Sorted Z to A",
       data: "string",
       isPadded: true,
+      onColumnClick: handleColumnClick,
     },
   ];
-
+ 
   useEffect(() => {
     if (
       props.tableFor == "ClosedIncidents" ||
@@ -136,6 +152,14 @@ const DetailsTable = (props) => {
       .get()
       .then(async (ticketData: any) => {
         allitems = [];
+        ticketData = ticketData.filter((ticket)=>{
+          if(props.tableFor =="ClosedIncidents"){
+            return ticket.Status.Title == "Closed"
+          }
+          else if(props.tableFor =="CurrentIncidents"){
+            return ticket.Status.Title != "Closed"
+          }
+        })
         await ticketData.forEach(async (tData) => {
           await allitems.push({
             Title: tData.Title,
@@ -194,17 +218,20 @@ const DetailsTable = (props) => {
   function AssignItems() {
     props.tableFor == "ClosedIncidents"
       ? (setItems([]),
-        setItems(allitems.filter((item) => item.Status == "Closed")))
+        setItems(allitems))
       : props.tableFor == "CurrentIncidents"
       ? (setItems([]),
-        setItems(allitems.filter((item) => item.Status != "Closed")))
+        setItems(allitems))
       : props.tableFor == "PopularPage"
       ? (setItems([]), setItems(allitems))
       : props.tableFor == "MyFeedBacks"
       ? (setItems([]), setItems(allitems))
       : "";
   }
-
+  function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boolean) {
+    const key = columnKey as keyof T;
+     setItems(items.slice(0).sort((a: T, b: T) => ((isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1)));
+  }
   return (
     <>
       <div className={classes.tableHeader}>
@@ -292,4 +319,5 @@ const DetailsTable = (props) => {
     </>
   );
 };
+
 export default DetailsTable;
