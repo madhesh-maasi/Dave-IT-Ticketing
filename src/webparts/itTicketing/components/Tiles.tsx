@@ -48,7 +48,7 @@ const Tiles = (props) => {
               "*,Owner/EMail,Owner/Title,Status/Title,AssignedTo/Title,AssignedTo/EMail"
             )
             .expand("Owner", "Status", "AssignedTo")
-            .filter(`Owner/EMail eq '${curUserMail}'`)
+            .filter(`Owner/EMail eq '${curUserMail}' or AssignedTo/EMail eq '${curUserMail}'`)
             .orderBy("Modified", false)
             .get()
             .then((listData) => {
@@ -147,7 +147,7 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileContent}>
           <div className={classes.contentAlignment}>
-            {closedIncident.length > 0 &&
+            {closedIncident.length > 0 ?
               closedIncident.slice(0, 3).map((incident) => {
                 return (
                   <p
@@ -188,7 +188,8 @@ const Tiles = (props) => {
                     </span>
                   </p>
                 );
-              })}
+              }):
+              <div style={{textAlign: "center"}}>No data available</div>}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -228,7 +229,8 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileContent}>
           <div className={classes.contentAlignment}>
-            {popularPages.slice(0, 3).map((page) => {
+            {popularPages.length>0?
+            popularPages.slice(0, 3).map((page) => {
               return (
                 <p>
                   <a
@@ -239,7 +241,7 @@ const Tiles = (props) => {
                   </a>
                 </p>
               );
-            })}
+            }):<div style={{textAlign: "center"}}>No data available</div>}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -275,7 +277,7 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileContent}>
           <div className={classes.contentAlignment}>
-            {openIncidents.length > 0 &&
+            {openIncidents.length > 0 ? 
               openIncidents.slice(0, 3).map((incident) => {
                 return (
                   <div className={classes.incidentStatus}>
@@ -287,7 +289,7 @@ const Tiles = (props) => {
                           width: "100%",
                         }}
                       >
-                        <span>{incident.Title} -</span>{" "}
+                        <span>{incident.Title}</span>{" "}
                         <span
                           style={{
                             padding: "0 0.3rem",
@@ -326,7 +328,8 @@ const Tiles = (props) => {
                     </div>
                   </div>
                 );
-              })}
+              }):
+              <div style={{textAlign: "center"}}>No data available</div>}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -362,9 +365,9 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileContent}>
           <div className={classes.contentAlignment}>
-            {feedback.slice(0, 3).map((fBack) => {
+            {feedback.length>0?feedback.slice(0, 3).map((fBack) => {
               return <p>{fBack.Title}</p>;
-            })}
+            }):<div style={{textAlign: "center"}}>No data available</div>}
           </div>
         </div>
         <div className={classes.tileFooter}>

@@ -125,7 +125,7 @@ const ApprovalCarousel = (props) => {
           iconName="ChevronLeft"
           style={{ fontSize: "1.3rem", cursor: "pointer" }}
         /> */}
-      {groupedItems.length > 0 &&
+      {groupedItems.length > 0 ?
         groupedItems.map((liItems) => {
           return (
             <div>
@@ -140,7 +140,7 @@ const ApprovalCarousel = (props) => {
                         width: "90%",
                       }}
                     >
-                      <div>{liItem.Title} -</div>
+                      <div>{liItem.Title}</div>
                       <div
                         style={{
                           fontWeight: "normal",
@@ -299,7 +299,7 @@ const ApprovalCarousel = (props) => {
               </Modal>
             </div>
           );
-        })}
+        }):<div style={{textAlign: "center"}}>No data available</div>}
     </Carousel>
   );
 };
