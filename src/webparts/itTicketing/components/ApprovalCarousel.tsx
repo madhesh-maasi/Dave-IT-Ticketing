@@ -268,6 +268,20 @@ const ApprovalCarousel = (props) => {
                               EscalatedOpenDate:
                                 new Date().toLocaleDateString(),
                             })
+                            : oldStatus == "Escalated to Presidio" && newStatus == "Closed"
+                          ? (updateData = {
+                              StatusId: defaultOption,
+                              EscalatedClosedDate:
+                                new Date().toLocaleDateString(),
+                              DateClosed:
+                                new Date().toLocaleDateString(),
+                            })
+                            : newStatus == "Closed"
+                          ? (updateData = {
+                              StatusId: defaultOption,
+                              DateClosed:
+                                new Date().toLocaleDateString(),
+                            })
                           : oldStatus == "Escalated to Presidio"
                           ? (updateData = {
                               StatusId: defaultOption,
