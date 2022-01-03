@@ -51,7 +51,7 @@ const Tiles = (props) => {
             .filter(`Owner/EMail eq '${curUserMail}' or AssignedTo/EMail eq '${curUserMail}'`)
             .orderBy("Modified", false)
             .get()
-            .then((listData) => {
+            .then((listData) => { 
               let arrClosedIncidents = listData.filter(
                 (item) => item.Status.Title == "Closed"
               );

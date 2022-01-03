@@ -11,8 +11,10 @@ import { useState, useEffect,useRef } from "react";
 import classes from "./ItTicketing.module.scss";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { PrimaryButton } from "@fluentui/react";
+import { graph } from "@pnp/graph/presets/all";
 import _ from "lodash";
 let allitems = [];
+let curUserMail = "";
 
 const DetailsTable = (props) => {
   const [items, setItems] = useState([]);
@@ -142,12 +144,17 @@ const DetailsTable = (props) => {
   }, []);
 
   async function IncidentItems() {
+    graph
+        .me()
+        .then(async (userResult) => {
+          curUserMail = userResult.userPrincipalName;
     await props.spcontext.web.lists
       .getByTitle("Tickets")
       .items.select(
         "*,Owner/EMail,Owner/Title,Status/Title,AssignedTo/Title,AssignedTo/EMail"
       )
       .expand("Owner", "Status", "AssignedTo")
+      .filter(`Owner/EMail eq '${curUserMail}' or AssignedTo/EMail eq '${curUserMail}'`)
       .orderBy("Created", false)
       .get()
       .then(async (ticketData: any) => {
@@ -174,7 +181,8 @@ const DetailsTable = (props) => {
       .catch((error) => {
         console.log(error);
       });
-  }
+    });
+    }
 
   async function PopularPages() {
     await props.spcontext.web.lists
