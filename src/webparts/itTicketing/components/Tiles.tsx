@@ -189,7 +189,7 @@ const Tiles = (props) => {
                   </p>
                 );
               }):
-              <div style={{textAlign: "center"}}>No data available</div>}
+              <div className={classes.nodata}>No data available</div>}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -241,7 +241,7 @@ const Tiles = (props) => {
                   </a>
                 </p>
               );
-            }):<div style={{textAlign: "center"}}>No data available</div>}
+            }):<div className={classes.nodata}>No data available</div>}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -292,34 +292,59 @@ const Tiles = (props) => {
                         <span>{incident.Title}</span>{" "}
                         <span
                           style={{
-                            padding: "0 0.3rem",
+                            padding: "0.3rem",
                             fontWeight: "normal",
-                            border:
-                              incident.Status.Title == "New"
-                                ? "2px solid #2844a7"
-                                : incident.Status.Title == "Closed"
-                                ? "2px solid #28a745"
-                                : incident.Status.Title ==
-                                  "Escalated to Presidio"
-                                ? "2px solid #dc3545"
-                                : incident.Status.Title == "In progress"
-                                ? "2px solid #a728a3"
-                                : incident.Status.Title == "On hold"
-                                ? "2px solid #a3a728"
-                                : "2px solid #000",
-                            color:
-                              incident.Status.Title == "New"
-                                ? "#2844a7"
-                                : incident.Status.Title == "Closed"
-                                ? "#28a745"
-                                : incident.Status.Title ==
-                                  "Escalated to Presidio"
-                                ? "#dc3545"
-                                : incident.Status.Title == "In progress"
-                                ? "#a728a3"
-                                : incident.Status.Title == "On hold"
-                                ? "#a3a728"
-                                : "#000",
+                            borderRadius: "0.5rem",
+                            // border:
+                            //   incident.Status.Title == "New"
+                            //     ? "2px solid #2844a7"
+                            //     : incident.Status.Title == "Closed"
+                            //     ? "2px solid #28a745"
+                            //     : incident.Status.Title ==
+                            //       "Escalated to Presidio"
+                            //     ? "2px solid #dc3545"
+                            //     : incident.Status.Title == "In progress"
+                            //     ? "2px solid #a728a3"
+                            //     : incident.Status.Title == "On hold"
+                            //     ? "2px solid #a3a728"
+                            //     : "2px solid #000",
+                            // color:
+                            //   incident.Status.Title == "New"
+                            //     ? "#2844a7"
+                            //     : incident.Status.Title == "Closed"
+                            //     ? "#28a745"
+                            //     : incident.Status.Title ==
+                            //       "Escalated to Presidio"
+                            //     ? "#dc3545"
+                            //     : incident.Status.Title == "In progress"
+                            //     ? "#a728a3"
+                            //     : incident.Status.Title == "On hold"
+                            //     ? "#a3a728"
+                            //     : "#000",
+                            backgroundColor:
+                            incident.Status.Title == "New"
+                            ? "#2844a74D" 
+                            : incident.Status.Title == "Closed"
+                            ? "#28a7454D"
+                            : incident.Status.Title == "Escalated to Presidio"
+                            ? "#dc35454D"
+                            : incident.Status.Title == "In progress"
+                            ? "#a728a34D"
+                            : incident.Status.Title == "On hold"
+                            ? "#a3a7284D"
+                            : "#0000004D",
+                          color: 
+                          incident.Status.Title == "New"
+                          ? "#2844a7" 
+                          : incident.Status.Title == "Closed"
+                          ? "#28a745"
+                          : incident.Status.Title == "Escalated to Presidio"
+                          ? "#dc3545"
+                          : incident.Status.Title == "In progress"
+                          ? "#a728a3"
+                          : incident.Status.Title == "On hold"
+                          ? "#a3a728"
+                          : "#000",
                           }}
                         >
                           {incident.Status.Title}
@@ -329,7 +354,7 @@ const Tiles = (props) => {
                   </div>
                 );
               }):
-              <div style={{textAlign: "center"}}>No data available</div>}
+              <div className={classes.nodata}>No data available</div>}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -367,7 +392,7 @@ const Tiles = (props) => {
           <div className={classes.contentAlignment}>
             {feedback.length>0?feedback.slice(0, 3).map((fBack) => {
               return <p>{fBack.Title}</p>;
-            }):<div style={{textAlign: "center"}}>No data available</div>}
+            }):<div className={classes.nodata}>No data available</div>}
           </div>
         </div>
         <div className={classes.tileFooter}>

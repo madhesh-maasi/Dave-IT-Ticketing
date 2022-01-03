@@ -149,6 +149,12 @@
     min-width: 300px;
   }
 }
+.nodata {
+  text-align: center;
+  font-weight: bold;
+  padding-top: 35px;
+  font-size: 1rem;
+}
 .myApproval {
   color: #000;
 }
@@ -196,6 +202,10 @@
     color: #000;
     text-decoration: none;
   }
+}
+.atag {
+  color: #000;
+  text-decoration: none;
 }
 .tileTitle {
   font-weight: 600;
@@ -292,13 +302,16 @@
   border-radius: 0.2rem;
 }
 .caroArrow {
-  font-size: 1.3rem;
+  font-size: 1rem;
   cursor: pointer;
   margin-top: 92px;
   color: #24299b;
   padding: 0.2rem;
+  border-radius: 50%;
+  border: 1px solid #24299b;
   // background-color: #24299b;
 }
+
 .tableHeader {
   display: flex;
   align-items: center;

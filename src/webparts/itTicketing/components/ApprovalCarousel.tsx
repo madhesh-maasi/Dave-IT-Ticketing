@@ -108,7 +108,7 @@ const ApprovalCarousel = (props) => {
           onClick={previousSlide}
           iconName="ChevronLeft"
           className={styles.caroArrow}
-          style={themeBoxShadow}
+          //style={themeBoxShadow}
         />
       )}
       renderCenterRightControls={({ nextSlide }) => (
@@ -116,7 +116,7 @@ const ApprovalCarousel = (props) => {
           onClick={nextSlide}
           iconName="ChevronRight"
           className={styles.caroArrow}
-          style={themeBoxShadow}
+          //style={themeBoxShadow}
         />
       )}
     >
@@ -144,31 +144,57 @@ const ApprovalCarousel = (props) => {
                       <div
                         style={{
                           fontWeight: "normal",
-                          padding: "0 0.3rem",
-                          border:
+                          padding: "0.1rem 0.3rem",
+                          borderRadius: "0.2rem",
+                          // border:
+                          //   liItem.Status.Title == "New"
+                          //     ? "2px solid #2844a7"
+                          //     : liItem.Status.Title == "Closed"
+                          //     ? "2px solid #28a745"
+                          //     : liItem.Status.Title == "Escalated to Presidio"
+                          //     ? "2px solid #dc3545"
+                          //     : liItem.Status.Title == "In progress"
+                          //     ? "2px solid #a728a3"
+                          //     : liItem.Status.Title == "On hold"
+                          //     ? "2px solid #a3a728"
+                          //     : "2px solid #000",
+                          // color:
+                          //   liItem.Status.Title == "New"
+                          //     ? "#2844a7"
+                          //     : liItem.Status.Title == "Closed"
+                          //     ? "#28a745"
+                          //     : liItem.Status.Title == "Escalated to Presidio"
+                          //     ? "#dc3545"
+                          //     : liItem.Status.Title == "In progress"
+                          //     ? "#a728a3"
+                          //     : liItem.Status.Title == "On hold"
+                          //     ? "#a3a728"
+                          //     : "#000",
+                              
+                            backgroundColor:
                             liItem.Status.Title == "New"
-                              ? "2px solid #2844a7"
-                              : liItem.Status.Title == "Closed"
-                              ? "2px solid #28a745"
-                              : liItem.Status.Title == "Escalated to Presidio"
-                              ? "2px solid #dc3545"
-                              : liItem.Status.Title == "In progress"
-                              ? "2px solid #a728a3"
-                              : liItem.Status.Title == "On hold"
-                              ? "2px solid #a3a728"
-                              : "2px solid #000",
-                          color:
-                            liItem.Status.Title == "New"
-                              ? "#2844a7"
-                              : liItem.Status.Title == "Closed"
-                              ? "#28a745"
-                              : liItem.Status.Title == "Escalated to Presidio"
-                              ? "#dc3545"
-                              : liItem.Status.Title == "In progress"
-                              ? "#a728a3"
-                              : liItem.Status.Title == "On hold"
-                              ? "#a3a728"
-                              : "#000",
+                            ? "#2844a74D" 
+                            : liItem.Status.Title == "Closed"
+                            ? "#28a7454D"
+                            : liItem.Status.Title == "Escalated to Presidio"
+                            ? "#dc35454D"
+                            : liItem.Status.Title == "In progress"
+                            ? "#a728a34D"
+                            : liItem.Status.Title == "On hold"
+                            ? "#a3a7284D"
+                            : "#0000004D",
+                          color: 
+                          liItem.Status.Title == "New"
+                          ? "#2844a7" 
+                          : liItem.Status.Title == "Closed"
+                          ? "#28a745"
+                          : liItem.Status.Title == "Escalated to Presidio"
+                          ? "#dc3545"
+                          : liItem.Status.Title == "In progress"
+                          ? "#a728a3"
+                          : liItem.Status.Title == "On hold"
+                          ? "#a3a728"
+                          : "#000",
                         }}
                       >
                         {liItem.Status.Title}
@@ -313,7 +339,7 @@ const ApprovalCarousel = (props) => {
               </Modal>
             </div>
           );
-        }):<div style={{textAlign: "center"}}>No data available</div>}
+        }):<div className={styles.nodata}>No data available</div>}
     </Carousel>
   );
 };

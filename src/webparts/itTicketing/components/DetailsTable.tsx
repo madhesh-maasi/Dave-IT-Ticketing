@@ -15,6 +15,9 @@ import { graph } from "@pnp/graph/presets/all";
 import _ from "lodash";
 let allitems = [];
 let curUserMail = "";
+let siteUrl = `https://${window.location.href.split("/")[2]}/sites/${
+  window.location.href.split("/")[4]
+}`;
 
 const DetailsTable = (props) => {
   const [items, setItems] = useState([]);
@@ -193,8 +196,15 @@ const DetailsTable = (props) => {
         allitems = [];
         var filteredPages = pages.filter((page) => page.isPopular == true);
         await filteredPages.forEach(async (tData) => {
+          console.log(tData);
+          
           await allitems.push({
-            Title: tData.Title,
+            Title:  <a className={classes.atag}
+            href={`${siteUrl}/SitePages/${tData.Title}.aspx`}
+            target="_blank"
+          >
+            {tData.Title}
+          </a>,
           });
         });
         AssignItems();
