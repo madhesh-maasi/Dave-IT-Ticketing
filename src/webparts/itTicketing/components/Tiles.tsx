@@ -292,7 +292,7 @@ const Tiles = (props) => {
                         <span>{incident.Title}</span>{" "}
                         <span
                           style={{
-                            padding: "0.3rem",
+                            padding: "0.1rem",
                             fontWeight: "normal",
                             borderRadius: "0.5rem",
                             // border:
