@@ -89,6 +89,9 @@
   display: flex;
   margin-bottom: 1rem;
   width: 24.4%;
+  div:nth-child(1) {
+    width: 100%;
+  }
 }
 .cardItem:not(:last-child) {
   margin-right: 0.5rem;
@@ -118,8 +121,9 @@
   display: flex;
   // justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 2rem;
   align-items: self-start;
+  width: 90%;
+  margin: auto;
 }
 .dialogItems {
   display: flex;
@@ -130,11 +134,8 @@
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  // background: rgba(179, 241, 252, 0.1);
-  // backdrop-filter: blur(10px);
-  // border-radius: 0.5rem;
-  width: 32%;
-  margin: 1rem 1rem 1rem 0;
+  width: 30%;
+  margin: 0.8rem;
 }
 @media screen and (min-width: 2000px) {
   .tileItem {

@@ -48,10 +48,12 @@ const Tiles = (props) => {
               "*,Owner/EMail,Owner/Title,Status/Title,AssignedTo/Title,AssignedTo/EMail"
             )
             .expand("Owner", "Status", "AssignedTo")
-            .filter(`Owner/EMail eq '${curUserMail}' or AssignedTo/EMail eq '${curUserMail}'`)
+            .filter(
+              `Owner/EMail eq '${curUserMail}' or AssignedTo/EMail eq '${curUserMail}'`
+            )
             .orderBy("Modified", false)
             .get()
-            .then((listData) => { 
+            .then((listData) => {
               let arrClosedIncidents = listData.filter(
                 (item) => item.Status.Title == "Closed"
               );
@@ -63,7 +65,8 @@ const Tiles = (props) => {
             })
             .then(async () => {
               await graph.groups
-                .getById("b64fbcf5-8935-4882-9d67-f18d0e4a91d8")
+                // .getById("b64fbcf5-8935-4882-9d67-f18d0e4a91d8") // Dev
+                .getById("dd7653a4-c401-4a2b-b019-adc0af58a7b6") //Client
                 .expand("members")
                 .get()
                 .then((groupData) => {
@@ -89,8 +92,6 @@ const Tiles = (props) => {
               .items.orderBy("Created", false)
               .getAll()
               .then((pages: any) => {
-                console.log(pages);
-
                 pages = pages.filter((page) => page.isPopular == true);
                 setPopularPages(pages);
               });
@@ -147,7 +148,7 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileContent}>
           <div className={classes.contentAlignment}>
-            {closedIncident.length > 0 ?
+            {closedIncident.length > 0 ? (
               closedIncident.slice(0, 3).map((incident) => {
                 return (
                   <p
@@ -188,8 +189,10 @@ const Tiles = (props) => {
                     </span>
                   </p>
                 );
-              }):
-              <div className={classes.nodata}>No data available</div>}
+              })
+            ) : (
+              <div className={classes.nodata}>No data available</div>
+            )}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -229,19 +232,22 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileContent}>
           <div className={classes.contentAlignment}>
-            {popularPages.length>0?
-            popularPages.slice(0, 3).map((page) => {
-              return (
-                <p>
-                  <a
-                    href={`${siteUrl}/SitePages/${page.Title}.aspx`}
-                    target="_blank"
-                  >
-                    {page.Title}
-                  </a>
-                </p>
-              );
-            }):<div className={classes.nodata}>No data available</div>}
+            {popularPages.length > 0 ? (
+              popularPages.slice(0, 3).map((page) => {
+                return (
+                  <p>
+                    <a
+                      href={`${siteUrl}/SitePages/${page.Title}.aspx`}
+                      target="_blank"
+                    >
+                      {page.Title}
+                    </a>
+                  </p>
+                );
+              })
+            ) : (
+              <div className={classes.nodata}>No data available</div>
+            )}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -277,7 +283,7 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileContent}>
           <div className={classes.contentAlignment}>
-            {openIncidents.length > 0 ? 
+            {openIncidents.length > 0 ? (
               openIncidents.slice(0, 3).map((incident) => {
                 return (
                   <div className={classes.incidentStatus}>
@@ -287,14 +293,15 @@ const Tiles = (props) => {
                           display: "flex",
                           justifyContent: "space-between",
                           width: "100%",
+                          alignItems: "center",
                         }}
                       >
                         <span>{incident.Title}</span>{" "}
                         <span
                           style={{
-                            padding: "0.1rem",
+                            padding: "0.1rem 0.5rem",
                             fontWeight: "normal",
-                            borderRadius: "0.5rem",
+                            borderRadius: "0.2rem",
                             // border:
                             //   incident.Status.Title == "New"
                             //     ? "2px solid #2844a7"
@@ -322,29 +329,31 @@ const Tiles = (props) => {
                             //     ? "#a3a728"
                             //     : "#000",
                             backgroundColor:
-                            incident.Status.Title == "New"
-                            ? "#2844a74D" 
-                            : incident.Status.Title == "Closed"
-                            ? "#28a7454D"
-                            : incident.Status.Title == "Escalated to Presidio"
-                            ? "#dc35454D"
-                            : incident.Status.Title == "In progress"
-                            ? "#a728a34D"
-                            : incident.Status.Title == "On hold"
-                            ? "#a3a7284D"
-                            : "#0000004D",
-                          color: 
-                          incident.Status.Title == "New"
-                          ? "#2844a7" 
-                          : incident.Status.Title == "Closed"
-                          ? "#28a745"
-                          : incident.Status.Title == "Escalated to Presidio"
-                          ? "#dc3545"
-                          : incident.Status.Title == "In progress"
-                          ? "#a728a3"
-                          : incident.Status.Title == "On hold"
-                          ? "#a3a728"
-                          : "#000",
+                              incident.Status.Title == "New"
+                                ? "#2844a74D"
+                                : incident.Status.Title == "Closed"
+                                ? "#28a7454D"
+                                : incident.Status.Title ==
+                                  "Escalated to Presidio"
+                                ? "#dc35454D"
+                                : incident.Status.Title == "In progress"
+                                ? "#a728a34D"
+                                : incident.Status.Title == "On hold"
+                                ? "#a3a7284D"
+                                : "#0000004D",
+                            color:
+                              incident.Status.Title == "New"
+                                ? "#2844a7"
+                                : incident.Status.Title == "Closed"
+                                ? "#28a745"
+                                : incident.Status.Title ==
+                                  "Escalated to Presidio"
+                                ? "#dc3545"
+                                : incident.Status.Title == "In progress"
+                                ? "#a728a3"
+                                : incident.Status.Title == "On hold"
+                                ? "#a3a728"
+                                : "#000",
                           }}
                         >
                           {incident.Status.Title}
@@ -353,8 +362,10 @@ const Tiles = (props) => {
                     </div>
                   </div>
                 );
-              }):
-              <div className={classes.nodata}>No data available</div>}
+              })
+            ) : (
+              <div className={classes.nodata}>No data available</div>
+            )}
           </div>
         </div>
         <div className={classes.tileFooter}>
@@ -390,9 +401,13 @@ const Tiles = (props) => {
         </div>
         <div className={classes.tileContent}>
           <div className={classes.contentAlignment}>
-            {feedback.length>0?feedback.slice(0, 3).map((fBack) => {
-              return <p>{fBack.Title}</p>;
-            }):<div className={classes.nodata}>No data available</div>}
+            {feedback.length > 0 ? (
+              feedback.slice(0, 3).map((fBack) => {
+                return <p>{fBack.Title}</p>;
+              })
+            ) : (
+              <div className={classes.nodata}>No data available</div>
+            )}
           </div>
         </div>
         <div className={classes.tileFooter}>

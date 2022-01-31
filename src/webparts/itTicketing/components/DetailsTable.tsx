@@ -7,7 +7,7 @@ import {
   SelectionMode,
   IColumn,
 } from "@fluentui/react/lib/DetailsList";
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import classes from "./ItTicketing.module.scss";
 import { Icon } from "@fluentui/react/lib/Icon";
 import { PrimaryButton } from "@fluentui/react";
@@ -25,15 +25,19 @@ const DetailsTable = (props) => {
   const [searchKey, setSearchKey] = useState("");
   const [dashTitle, setDashTitle] = useState("");
   const handleColumnClick = (ev, col) => {
-    _copyAndSort(allitems, col.fieldName,col.isSortedDescending)
-    col.isSortedDescending?col.isSortedDescending=false:col.isSortedDescending=true;
-    let oldColumns = columns.filter((colm)=>colm.key ==col.key);
-    oldColumns[0].isSortedDescending == true?(oldColumns[0].isSortedDescending = false):(oldColumns[0].isSortedDescending = true);
-    let newColumns = columns.filter((colm)=>colm.key !=col.key);
-    columns = [...oldColumns,...newColumns];
-    columns = _.sortBy(columns,'key');
-    
-    setcolumnsForTable(columns)
+    _copyAndSort(allitems, col.fieldName, col.isSortedDescending);
+    col.isSortedDescending
+      ? (col.isSortedDescending = false)
+      : (col.isSortedDescending = true);
+    let oldColumns = columns.filter((colm) => colm.key == col.key);
+    oldColumns[0].isSortedDescending == true
+      ? (oldColumns[0].isSortedDescending = false)
+      : (oldColumns[0].isSortedDescending = true);
+    let newColumns = columns.filter((colm) => colm.key != col.key);
+    columns = [...oldColumns, ...newColumns];
+    columns = _.sortBy(columns, "key");
+
+    setcolumnsForTable(columns);
   };
   let columns: IColumn[] = [
     {
@@ -45,12 +49,12 @@ const DetailsTable = (props) => {
       isRowHeader: true,
       isResizable: true,
       isSorted: true,
-      sortAscendingAriaLabel: 'Sorted A to Z',
-      sortDescendingAriaLabel: 'Sorted Z to A',
+      sortAscendingAriaLabel: "Sorted A to Z",
+      sortDescendingAriaLabel: "Sorted Z to A",
       data: "string",
       isPadded: true,
       onColumnClick: handleColumnClick,
-      isSortedDescending: true
+      isSortedDescending: true,
     },
     {
       key: "column2",
@@ -120,7 +124,7 @@ const DetailsTable = (props) => {
       onColumnClick: handleColumnClick,
     },
   ];
- 
+
   useEffect(() => {
     if (
       props.tableFor == "ClosedIncidents" ||
@@ -147,45 +151,44 @@ const DetailsTable = (props) => {
   }, []);
 
   async function IncidentItems() {
-    graph
-        .me()
-        .then(async (userResult) => {
-          curUserMail = userResult.userPrincipalName;
-    await props.spcontext.web.lists
-      .getByTitle("Tickets")
-      .items.select(
-        "*,Owner/EMail,Owner/Title,Status/Title,AssignedTo/Title,AssignedTo/EMail"
-      )
-      .expand("Owner", "Status", "AssignedTo")
-      .filter(`Owner/EMail eq '${curUserMail}' or AssignedTo/EMail eq '${curUserMail}'`)
-      .orderBy("Created", false)
-      .get()
-      .then(async (ticketData: any) => {
-        allitems = [];
-        ticketData = ticketData.filter((ticket)=>{
-          if(props.tableFor =="ClosedIncidents"){
-            return ticket.Status.Title == "Closed"
-          }
-          else if(props.tableFor =="CurrentIncidents"){
-            return ticket.Status.Title != "Closed"
-          }
-        })
-        await ticketData.forEach(async (tData) => {
-          await allitems.push({
-            Title: tData.Title,
-            Owner: tData.Owner.Title,
-            AssignedTo: tData.AssignedTo ? tData.AssignedTo.Title : "",
-            Status: tData.Status.Title,
+    graph.me().then(async (userResult) => {
+      curUserMail = userResult.userPrincipalName;
+      await props.spcontext.web.lists
+        .getByTitle("Tickets")
+        .items.select(
+          "*,Owner/EMail,Owner/Title,Status/Title,AssignedTo/Title,AssignedTo/EMail"
+        )
+        .expand("Owner", "Status", "AssignedTo")
+        .filter(
+          `Owner/EMail eq '${curUserMail}' or AssignedTo/EMail eq '${curUserMail}'`
+        )
+        .orderBy("Created", false)
+        .get()
+        .then(async (ticketData: any) => {
+          allitems = [];
+          ticketData = ticketData.filter((ticket) => {
+            if (props.tableFor == "ClosedIncidents") {
+              return ticket.Status.Title == "Closed";
+            } else if (props.tableFor == "CurrentIncidents") {
+              return ticket.Status.Title != "Closed";
+            }
           });
-        });
+          await ticketData.forEach(async (tData) => {
+            await allitems.push({
+              Title: tData.Title,
+              Owner: tData.Owner.Title,
+              AssignedTo: tData.AssignedTo ? tData.AssignedTo.Title : "",
+              Status: tData.Status.Title,
+            });
+          });
 
-        AssignItems();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+          AssignItems();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     });
-    }
+  }
 
   async function PopularPages() {
     await props.spcontext.web.lists
@@ -196,15 +199,16 @@ const DetailsTable = (props) => {
         allitems = [];
         var filteredPages = pages.filter((page) => page.isPopular == true);
         await filteredPages.forEach(async (tData) => {
-          console.log(tData);
-          
           await allitems.push({
-            Title:  <a className={classes.atag}
-            href={`${siteUrl}/SitePages/${tData.Title}.aspx`}
-            target="_blank"
-          >
-            {tData.Title}
-          </a>,
+            Title: (
+              <a
+                className={classes.atag}
+                href={`${siteUrl}/SitePages/${tData.Title}.aspx`}
+                target="_blank"
+              >
+                {tData.Title}
+              </a>
+            ),
           });
         });
         AssignItems();
@@ -235,20 +239,28 @@ const DetailsTable = (props) => {
 
   function AssignItems() {
     props.tableFor == "ClosedIncidents"
-      ? (setItems([]),
-        setItems(allitems))
+      ? (setItems([]), setItems(allitems))
       : props.tableFor == "CurrentIncidents"
-      ? (setItems([]),
-        setItems(allitems))
+      ? (setItems([]), setItems(allitems))
       : props.tableFor == "PopularPage"
       ? (setItems([]), setItems(allitems))
       : props.tableFor == "MyFeedBacks"
       ? (setItems([]), setItems(allitems))
       : "";
   }
-  function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boolean) {
+  function _copyAndSort<T>(
+    items: T[],
+    columnKey: string,
+    isSortedDescending?: boolean
+  ) {
     const key = columnKey as keyof T;
-     setItems(items.slice(0).sort((a: T, b: T) => ((isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1)));
+    setItems(
+      items
+        .slice(0)
+        .sort((a: T, b: T) =>
+          (isSortedDescending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1
+        )
+    );
   }
   return (
     <>

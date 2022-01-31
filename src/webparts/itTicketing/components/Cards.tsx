@@ -91,7 +91,7 @@ const Cards = (props) => {
           <DocumentCardTitle
             styles={cardSecondaryTitleStyles}
             title={
-              "This will redirect you to the Intranet/Learning Training SharePoint site"
+              "This tile will take you to the RPM Learning & Training site"
             }
             shouldTruncate
             showAsSecondaryTitle
@@ -106,18 +106,19 @@ const Cards = (props) => {
           styles={cardStyles}
           onClick={() => {
             window.open(
-              UrlConfig.filter((fil) => fil.Title == "Order")[0].Url,
+              UrlConfig.filter((fil) => fil.Title == "Coming Soon")[0].Url,
               "_blank"
             );
           }}
         >
           <DocumentCardLogo {...iconOrderProps} styles={iconColor} />
-          <DocumentCardTitle styles={cardPrimaryTitleStyles} title={"Order"} />
+          <DocumentCardTitle
+            styles={cardPrimaryTitleStyles}
+            title={"Coming Soon"}
+          />
           <DocumentCardTitle
             styles={cardSecondaryTitleStyles}
-            title={
-              "This will redirect you to the Intranet/Learning Training SharePoint site"
-            }
+            title={"Request Hardware or Software"}
             shouldTruncate
             showAsSecondaryTitle
           />
@@ -147,9 +148,7 @@ const Cards = (props) => {
           />
           <DocumentCardTitle
             styles={cardSecondaryTitleStyles}
-            title={
-              "This will redirect you to the Intranet/Learning Training SharePoint site"
-            }
+            title={"Submit your IT Support Ticket Here"}
             shouldTruncate
             showAsSecondaryTitle
           />
@@ -163,7 +162,7 @@ const Cards = (props) => {
           styles={cardStyles}
           onClick={() => {
             window.open(
-              UrlConfig.filter((fil) => fil.Title == "Give Feedback")[0].Url,
+              UrlConfig.filter((fil) => fil.Title == "Feedback")[0].Url,
               "_blank"
             );
           }}
@@ -171,13 +170,11 @@ const Cards = (props) => {
           <DocumentCardLogo {...iconGiveFeedbackProps} styles={iconColor} />
           <DocumentCardTitle
             styles={cardPrimaryTitleStyles}
-            title={"Give Feedback"}
+            title={"Feedback"}
           />
           <DocumentCardTitle
             styles={cardSecondaryTitleStyles}
-            title={
-              "This will redirect you to the Intranet/Learning Training SharePoint site"
-            }
+            title={"Your Feedback is Important to us, Submit Here"}
             shouldTruncate
             showAsSecondaryTitle
           />
